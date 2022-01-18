@@ -1,0 +1,8 @@
+FROM node:lts
+
+RUN npm install -g @angular/cli@^13.0.0
+
+WORKDIR /usr/src/app
+
+COPY ./ /usr/src/app/
+

@@ -1,0 +1,39 @@
+version: '3.8'
+
+networks:
+  three:
+
+services:
+
+  nginx-proxy:
+    image: jwilder/nginx-proxy
+    ports:
+      - '80:80'
+    #  - '443:443'
+    volumes:
+      - '/var/run/docker.sock:/tmp/docker.sock:ro'
+      - 'certs:/etc/nginx/certs:ro'
+      - 'vhostd:/etc/nginx/vhost.d'
+      - 'html:/usr/share/nginx/html'
+    networks:
+      - three
+ 
+  three-service:
+    build:
+      context: ./frontend/
+      dockerfile: ./Dockerfile-dev
+    container_name: three-container
+    expose:
+      - '80'
+    volumes:
+      - ./frontend:/usr/src/app
+    stdin_open: true
+    networks:
+      - three
+    environment:
+      - VIRTUAL_HOST=localhost
+
+volumes:
+  certs: null
+  html: null
+  vhostd: null
